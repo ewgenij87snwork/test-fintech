@@ -6,6 +6,7 @@ import {NgForOf, NgIf} from "@angular/common";
 import {FormsModule} from "@angular/forms";
 import {CurrencyService} from "../../services/currency.service";
 import {SelectedCurrency} from "../../types/interfaces/selected-currency";
+import {MatButton} from "@angular/material/button";
 
 @Component({
   selector: 'app-currencies',
@@ -16,7 +17,8 @@ import {SelectedCurrency} from "../../types/interfaces/selected-currency";
     MatOption,
     NgIf,
     FormsModule,
-    NgForOf
+    NgForOf,
+    MatButton
   ],
   templateUrl: './currencies.component.html',
   styleUrl: './currencies.component.scss'
@@ -37,6 +39,9 @@ export class CurrenciesComponent implements OnInit {
 
   onCurrencySelectionChange(currency: SelectedCurrency) {
     this.selectedCurrency = currency;
-    this.currencyService.setSelectedCurrency(this.selectedCurrency);
+  }
+
+  onButtonSubscribe() {
+    this.selectedCurrency && this.currencyService.setSelectedCurrency(this.selectedCurrency);
   }
 }
