@@ -5,6 +5,7 @@ import {MatOption, MatSelect} from "@angular/material/select";
 import {NgForOf, NgIf} from "@angular/common";
 import {FormsModule} from "@angular/forms";
 import {CurrencyService} from "../../services/currency.service";
+import {SelectedCurrency} from "../../types/interfaces/selected-currency";
 
 @Component({
   selector: 'app-currencies',
@@ -24,8 +25,8 @@ export class CurrenciesComponent implements OnInit {
   private readonly httpService = inject(HttpService);
   private readonly currencyService = inject(CurrencyService);
 
-  public currencies: string[] = [];
-  public selectedCurrency = '';
+  public currencies: SelectedCurrency[] = [];
+  public selectedCurrency: SelectedCurrency | undefined;
 
   ngOnInit(): void {
    this.httpService.getListInstruments().subscribe(r => {
@@ -34,9 +35,8 @@ export class CurrenciesComponent implements OnInit {
    });
   }
 
-  onCurrencySelectionChange(currency: string) {
+  onCurrencySelectionChange(currency: SelectedCurrency) {
     this.selectedCurrency = currency;
     this.currencyService.setSelectedCurrency(this.selectedCurrency);
   }
-
 }

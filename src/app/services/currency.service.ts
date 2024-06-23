@@ -1,14 +1,16 @@
-import { Injectable } from '@angular/core';
-import {BehaviorSubject} from "rxjs";
+import {Injectable} from '@angular/core';
+import {Subject} from "rxjs";
+import {SelectedCurrency} from "../types/interfaces/selected-currency";
 
 @Injectable({
   providedIn: 'root'
 })
 export class CurrencyService {
-  private selectedCurrencySubject = new BehaviorSubject<string>('');
+  private selectedCurrencySubject = new Subject<SelectedCurrency>();
+
   selectedCurrency$ = this.selectedCurrencySubject.asObservable();
 
-  setSelectedCurrency(currency: string) {
+  setSelectedCurrency(currency: SelectedCurrency) {
     this.selectedCurrencySubject.next(currency);
   }
 }

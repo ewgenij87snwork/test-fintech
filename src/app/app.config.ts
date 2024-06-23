@@ -5,7 +5,7 @@ import { routes } from './app.routes';
 import {provideHttpClient, withInterceptors} from "@angular/common/http";
 import {provideCharts, withDefaultRegisterables} from "ng2-charts";
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import {tokenInterceptor} from "./components/interceptors/token.interceptor";
+import {tokenInterceptor} from "./interceptors/token.interceptor";
 
 export const appConfig: ApplicationConfig = {
   providers: [
