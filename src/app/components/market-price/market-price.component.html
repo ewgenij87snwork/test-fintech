@@ -18,9 +18,15 @@
 </ng-container>
 
 <ng-template #dataNotLoadedTemplate>
-  <div class="not-loaded">
+  <div *ngIf="!isTimeout; else timeout" class="not-loaded">
     <span>Market Data not loaded</span>
     <br>
     <span>Select pair and press <b>Subscribe</b></span>
   </div>
+
+  <ng-template #timeout>
+    <span>Something wrong.</span>
+    <br>
+    <span>Select another pair.</span>
+  </ng-template>
 </ng-template>

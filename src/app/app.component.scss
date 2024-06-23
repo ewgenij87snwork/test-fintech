@@ -5,3 +5,9 @@ main {
   flex-direction: column;
   height: 100vh;
 }
+
+main > * {
+  flex: 1;
+  width: 500px;
+  max-width: 100%;
+}
