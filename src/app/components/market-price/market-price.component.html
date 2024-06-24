@@ -1,17 +1,18 @@
 <h3>Market Data</h3>
-<ul [ngClass]="{ 'loading': isLoading }" class="market">
+<ul [ngClass]="{ loading: isLoading }" class="market">
   <li>
     Symbol:
-    <br>
+    <br />
     <span>{{ currency.symbol || 'AUD/CAD' }}</span>
   </li>
-  <li>Price:
-    <br>
+  <li>
+    Price:
+    <br />
     <span>{{ currency.price || '247.43' }}</span>
   </li>
-  <li>Time:
-    <br>
+  <li>
+    Time:
+    <br />
     <span>{{ currency.timestamp || 'Jun 24, 12:54 PM' }}</span>
   </li>
 </ul>
-

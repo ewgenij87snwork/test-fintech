@@ -3,5 +3,5 @@ export interface SelectedCurrency {
   id: string;
   mappings?: {
     simulation: any;
-  }
+  };
 }

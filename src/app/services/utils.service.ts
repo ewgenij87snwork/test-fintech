@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class UtilsService {
   public formatDate(timestamp: string) {
@@ -12,7 +12,7 @@ export class UtilsService {
       day: 'numeric',
       hour: 'numeric',
       minute: 'numeric',
-      hour12: true
+      hour12: true,
     };
 
     const formatter = new Intl.DateTimeFormat('en-US', options);

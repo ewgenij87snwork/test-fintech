@@ -1,16 +1,16 @@
-import {Component, DestroyRef, OnInit} from '@angular/core';
-import {createChart} from "lightweight-charts";
-import {CurrencyService} from "../../services/currency.service";
-import {HttpService} from "../../services/http.service";
-import {HistoricalPrice} from "../../types/interfaces/historical-price";
-import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
+import { Component, DestroyRef, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { createChart } from 'lightweight-charts';
+import { CurrencyService } from '../../services/currency.service';
+import { HttpService } from '../../services/http.service';
+import { HistoricalPrice } from '../../types/interfaces/historical-price';
 
 @Component({
   selector: 'app-chart',
   standalone: true,
   imports: [],
   templateUrl: './chart.component.html',
-  styleUrl: './chart.component.scss'
+  styleUrl: './chart.component.scss',
 })
 export class ChartComponent implements OnInit {
   public chart: any;
@@ -21,18 +21,20 @@ export class ChartComponent implements OnInit {
   constructor(
     private destroyRef: DestroyRef,
     private httpService: HttpService,
-    private currencyService: CurrencyService,
-    ) {}
+    private currencyService: CurrencyService
+  ) {}
 
   ngOnInit() {
     this.currencyService.selectedCurrency$
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(currency => this.httpService.getHistoricalPrice(currency.id).subscribe(r => {
-      if (r) {
-        this.candleData = r;
-        this.initChart(this.candleData)
-      }
-    }))
+      .subscribe(currency =>
+        this.httpService.getHistoricalPrice(currency.id).subscribe(r => {
+          if (r) {
+            this.candleData = r;
+            this.initChart(this.candleData);
+          }
+        })
+      );
   }
 
   private initChart(candleData: HistoricalPrice[]) {
@@ -43,13 +45,21 @@ export class ChartComponent implements OnInit {
     this.chart = createChart('chart', {
       grid: {
         vertLines: {
-          color: '#cccccc', style: 1, visible: true
-        }, horzLines: {
-          color: '#cccccc', style: 1, visible: true
+          color: '#cccccc',
+          style: 1,
+          visible: true,
         },
-      }, crosshair: {
+        horzLines: {
+          color: '#cccccc',
+          style: 1,
+          visible: true,
+        },
+      },
+      crosshair: {
         mode: 0,
-      }, width: 500, height: 400,
+      },
+      width: 500,
+      height: 400,
     });
 
     this.candlestickSeries = this.chart.addCandlestickSeries({
@@ -62,12 +72,13 @@ export class ChartComponent implements OnInit {
       mouseWheel: true,
     });
 
-    this.candlestickSeries.setData(candleData)
+    this.candlestickSeries.setData(candleData);
 
     const firstViewCandleIndex = candleData.length - 30;
     const lastViewCandleIndex = candleData.length - 1;
     this.chart.timeScale().setVisibleRange({
-      from: candleData[firstViewCandleIndex].time, to: candleData[lastViewCandleIndex].time,
+      from: candleData[firstViewCandleIndex].time,
+      to: candleData[lastViewCandleIndex].time,
     });
   }
 }

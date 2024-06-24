@@ -1,12 +1,12 @@
-import {Component, OnInit} from '@angular/core';
-import {HttpService} from "../../services/http.service";
-import {MatFormField} from "@angular/material/form-field";
-import {MatOption, MatSelect} from "@angular/material/select";
-import {NgForOf, NgIf} from "@angular/common";
-import {FormsModule} from "@angular/forms";
-import {CurrencyService} from "../../services/currency.service";
-import {SelectedCurrency} from "../../types/interfaces/selected-currency";
-import {MatButton} from "@angular/material/button";
+import { NgForOf, NgIf } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { MatButton } from '@angular/material/button';
+import { MatFormField } from '@angular/material/form-field';
+import { MatOption, MatSelect } from '@angular/material/select';
+import { CurrencyService } from '../../services/currency.service';
+import { HttpService } from '../../services/http.service';
+import { SelectedCurrency } from '../../types/interfaces/selected-currency';
 
 @Component({
   selector: 'app-currencies',
@@ -18,10 +18,10 @@ import {MatButton} from "@angular/material/button";
     NgIf,
     FormsModule,
     NgForOf,
-    MatButton
+    MatButton,
   ],
   templateUrl: './currencies.component.html',
-  styleUrl: './currencies.component.scss'
+  styleUrl: './currencies.component.scss',
 })
 export class CurrenciesComponent implements OnInit {
   public currencies: SelectedCurrency[] = [];
@@ -33,11 +33,11 @@ export class CurrenciesComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-   this.httpService.getListInstruments().subscribe(r => {
-     this.currencies = r;
-     this.onCurrencySelectionChange(this.currencies[0]);
-     this.currencyService.setSelectedCurrency(this.currencies[0])
-   });
+    this.httpService.getListInstruments().subscribe(r => {
+      this.currencies = r;
+      this.onCurrencySelectionChange(this.currencies[0]);
+      this.currencyService.setSelectedCurrency(this.currencies[0]);
+    });
   }
 
   onCurrencySelectionChange(currency: SelectedCurrency) {
@@ -45,6 +45,7 @@ export class CurrenciesComponent implements OnInit {
   }
 
   onButtonSubscribe() {
-    this.selectedCurrency && this.currencyService.setSelectedCurrency(this.selectedCurrency);
+    this.selectedCurrency &&
+      this.currencyService.setSelectedCurrency(this.selectedCurrency);
   }
 }

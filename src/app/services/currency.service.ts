@@ -1,9 +1,9 @@
-import {Injectable} from '@angular/core';
-import {Subject} from "rxjs";
-import {SelectedCurrency} from "../types/interfaces/selected-currency";
+import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
+import { SelectedCurrency } from '../types/interfaces/selected-currency';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CurrencyService {
   private selectedCurrencySubject = new Subject<SelectedCurrency>();
