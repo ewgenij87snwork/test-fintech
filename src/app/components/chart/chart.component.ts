@@ -1,58 +1,60 @@
-import { Component } from '@angular/core';
-import {ChartDataset, ChartOptions, ChartType} from 'chart.js';
-import * as data from '@mock/history.json';
-import {BaseChartDirective} from "ng2-charts";
+import {Component, inject, OnInit} from '@angular/core';
+import {createChart} from "lightweight-charts";
+import {CurrencyService} from "../../services/currency.service";
+import {HttpService} from "../../services/http.service";
+import {HistoricalPrice} from "../../types/interfaces/historical-price";
 
 @Component({
   selector: 'app-chart',
   standalone: true,
-  imports: [
-    BaseChartDirective
-  ],
+  imports: [],
   templateUrl: './chart.component.html',
   styleUrl: './chart.component.scss'
 })
-export class ChartComponent {
-private readonly historyData = data.data;
-  public lineChartData: ChartDataset[] = [
-    {
-      data: [],
-      label: 'Historical prices',
-      pointRadius: 0,
-      borderColor: 'black',
-      backgroundColor: 'rgba(255,255,0,0.3)'
-    },
-  ];
-  public lineChartLabels: any[] = [];
+export class ChartComponent implements OnInit {
+  private readonly httpService = inject(HttpService);
+  private readonly currencyService = inject(CurrencyService);
 
-  public lineChartOptions: (ChartOptions & { annotation: any }) = {
-    responsive: true,
-    scales: {
-      // @ts-ignore
-      xAxes: [{
-        type: 'time',
-        time: {
-          unit: 'day'
-        }
-      }],
-      // @ts-ignore
-      yAxes: [{
-        ticks: {
-          beginAtZero: true
-        }
-      }]
-    },
-    annotation: {}
-  };
+  public chart: any;
+  public candlestickSeries: any;
+  private candleData: HistoricalPrice[] | undefined;
 
-  public lineChartType: ChartType = 'line';
+  ngOnInit() {
+    this.currencyService.selectedCurrency$.subscribe(currency => this.httpService.getHistoricalPrice(currency.id).subscribe(r => {
+      if (r) {
+        this.candleData = r;
+        this.initChart(this.candleData)
+      }
+    }))
+  }
 
-  ngOnInit(): void {
-    if (this.historyData) {
-      this.lineChartData[0].data = this.historyData.map(entry => entry.o);
-      this.lineChartLabels = this.historyData.map(entry =>
-        (new Date(entry.t)).toDateString()
-      );
+  private initChart(candleData: HistoricalPrice[]) {
+    if (this.chart) {
+      this.chart.remove();
     }
+
+    this.chart = createChart('chart', {
+      grid: {
+        vertLines: {
+          color: '#cccccc', style: 1, visible: true
+        }, horzLines: {
+          color: '#cccccc', style: 1, visible: true
+        },
+      }, crosshair: {
+        mode: 0,
+      }, width: 500, height: 400,
+    });
+
+    this.candlestickSeries = this.chart.addCandlestickSeries({
+      upColor: '#283593',
+      downColor: '#e5eaf6',
+      borderVisible: true,
+      borderColor: '#283593',
+      wickUpColor: '#283593',
+      wickDownColor: '#283593',
+      mouseWheel: true,
+    });
+
+    this.candlestickSeries.setData(candleData)
   }
 }

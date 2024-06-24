@@ -1,3 +1,10 @@
-.chart {
-  display: block;
+:host {
+  h2 {
+    font-weight: normal;
+  }
+
+  .chart {
+    width: 100%;
+    border: 1px solid black;
+  }
 }
