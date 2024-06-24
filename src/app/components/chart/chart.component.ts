@@ -17,7 +17,7 @@ export class ChartComponent implements OnInit {
 
   public chart: any;
   public candlestickSeries: any;
-  private candleData: HistoricalPrice[] | undefined;
+  private candleData!: HistoricalPrice[];
 
   ngOnInit() {
     this.currencyService.selectedCurrency$.subscribe(currency => this.httpService.getHistoricalPrice(currency.id).subscribe(r => {
@@ -56,5 +56,11 @@ export class ChartComponent implements OnInit {
     });
 
     this.candlestickSeries.setData(candleData)
+
+    const firstViewCandleIndex = candleData.length - 30;
+    const lastViewCandleIndex = candleData.length - 1;
+    this.chart.timeScale().setVisibleRange({
+      from: candleData[firstViewCandleIndex].time, to: candleData[lastViewCandleIndex].time,
+    });
   }
 }
