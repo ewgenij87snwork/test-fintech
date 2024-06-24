@@ -5,10 +5,16 @@
     font-weight: normal;
   }
 
+  .loading {
+    filter: blur(5px);
+    opacity: 0.5;
+  }
+
   ul {
     display: flex;
     justify-content: space-around;
     margin-bottom: 20px;
+    margin-top: 0;
     padding: 10px;
     width: 478px;
     border: 1px solid #ccc;

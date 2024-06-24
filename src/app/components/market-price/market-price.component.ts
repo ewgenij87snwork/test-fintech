@@ -1,16 +1,17 @@
-import {Component, inject, OnDestroy, OnInit} from '@angular/core';
+import {Component, DestroyRef, OnDestroy, OnInit} from '@angular/core';
 import {CurrencyService} from "../../services/currency.service";
 import {Currency} from "../../types/interfaces/currency";
 import {WebSocketService} from "../../services/web-socket.service";
 import {MatCard, MatCardContent} from "@angular/material/card";
-import {AsyncPipe, JsonPipe, NgIf} from "@angular/common";
+import {AsyncPipe, JsonPipe, NgClass, NgIf, NgStyle} from "@angular/common";
 import {UtilsService} from "../../services/utils.service";
-import {Subject, switchMap, takeUntil, tap, timer} from "rxjs";
+import {Subject, switchMap, tap, timer} from "rxjs";
+import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 
 @Component({
   selector: 'app-market-price',
   standalone: true,
-  imports: [MatCard, MatCardContent, NgIf, JsonPipe, AsyncPipe],
+  imports: [MatCard, MatCardContent, NgIf, JsonPipe, AsyncPipe, NgStyle, NgClass],
   templateUrl: './market-price.component.html',
   styleUrl: './market-price.component.scss'
 })
@@ -19,17 +20,19 @@ export class MarketPriceComponent implements OnInit, OnDestroy {
     price: 0, timestamp: '', symbol: '', instrumentId: '',
   };
   public isTimeout = false;
-  private readonly currencyService = inject(CurrencyService);
-  private readonly webSocketService = inject(WebSocketService);
-  private readonly utilsService = inject(UtilsService);
-  private unsubscribe$ = new Subject<void>();
+  public isLoading = false;
+
   private timeout$ = new Subject<void>();
   private timeoutDuration = 4000;
 
+  constructor(private currencyService: CurrencyService, private webSocketService: WebSocketService, private destroyRef: DestroyRef, private utilsService: UtilsService,) {
+  }
+
   ngOnInit() {
     this.currencyService.selectedCurrency$
-      .pipe(takeUntil(this.unsubscribe$), switchMap(selectedCurrency => {
+      .pipe(switchMap(selectedCurrency => {
         if (selectedCurrency && selectedCurrency.id.length > 0) {
+          this.isLoading = true;
           this.webSocketService.sendData(selectedCurrency.id);
           this.resetTimeout();
 
@@ -43,15 +46,17 @@ export class MarketPriceComponent implements OnInit, OnDestroy {
                 instrumentId: currencyWSData.instrumentId,
                 symbol: selectedCurrency.symbol,
               };
+              this.isLoading = false;
+
             }
           }));
         }
         return [];
-      }))
+      }), takeUntilDestroyed(this.destroyRef))
       .subscribe();
 
     this.timeout$
-      .pipe(switchMap(() => timer(this.timeoutDuration)), takeUntil(this.unsubscribe$))
+      .pipe(switchMap(() => timer(this.timeoutDuration)), takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.currency.symbol = '';
         this.isTimeout = true;
@@ -59,9 +64,6 @@ export class MarketPriceComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
-    this.timeout$.complete();
     this.webSocketService.closeConnection();
   }
 

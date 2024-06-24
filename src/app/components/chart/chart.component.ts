@@ -1,8 +1,9 @@
-import {Component, inject, OnInit} from '@angular/core';
+import {Component, DestroyRef, OnInit} from '@angular/core';
 import {createChart} from "lightweight-charts";
 import {CurrencyService} from "../../services/currency.service";
 import {HttpService} from "../../services/http.service";
 import {HistoricalPrice} from "../../types/interfaces/historical-price";
+import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 
 @Component({
   selector: 'app-chart',
@@ -12,15 +13,21 @@ import {HistoricalPrice} from "../../types/interfaces/historical-price";
   styleUrl: './chart.component.scss'
 })
 export class ChartComponent implements OnInit {
-  private readonly httpService = inject(HttpService);
-  private readonly currencyService = inject(CurrencyService);
-
   public chart: any;
   public candlestickSeries: any;
+
   private candleData!: HistoricalPrice[];
 
+  constructor(
+    private destroyRef: DestroyRef,
+    private httpService: HttpService,
+    private currencyService: CurrencyService,
+    ) {}
+
   ngOnInit() {
-    this.currencyService.selectedCurrency$.subscribe(currency => this.httpService.getHistoricalPrice(currency.id).subscribe(r => {
+    this.currencyService.selectedCurrency$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(currency => this.httpService.getHistoricalPrice(currency.id).subscribe(r => {
       if (r) {
         this.candleData = r;
         this.initChart(this.candleData)

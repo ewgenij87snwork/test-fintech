@@ -8,7 +8,7 @@ import {SelectedCurrency} from "../types/interfaces/selected-currency";
 export class CurrencyService {
   private selectedCurrencySubject = new Subject<SelectedCurrency>();
 
-  selectedCurrency$ = this.selectedCurrencySubject.asObservable();
+  public selectedCurrency$ = this.selectedCurrencySubject.asObservable();
 
   setSelectedCurrency(currency: SelectedCurrency) {
     this.selectedCurrencySubject.next(currency);

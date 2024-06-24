@@ -1,32 +1,17 @@
 <h3>Market Data</h3>
-<ng-container *ngIf="currency.symbol; else dataNotLoadedTemplate">
-  <ul class="market">
-    <li>
-      Symbol:
-      <br>
-      <span>{{ currency.symbol }}</span>
-    </li>
-    <li>Price:
-      <br>
-      <span>{{ currency.price }}</span>
-    </li>
-    <li>Time:
-      <br>
-      <span>{{ currency.timestamp }}</span>
-    </li>
-  </ul>
-</ng-container>
-
-<ng-template #dataNotLoadedTemplate>
-  <div *ngIf="!isTimeout; else timeout" class="not-loaded">
-    <span>Market Data not loaded</span>
+<ul [ngClass]="{ 'loading': isLoading }" class="market">
+  <li>
+    Symbol:
     <br>
-    <span>Select pair and press <b>Subscribe</b></span>
-  </div>
-
-  <ng-template #timeout>
-    <span>Something wrong.</span>
+    <span>{{ currency.symbol || 'AUD/CAD' }}</span>
+  </li>
+  <li>Price:
     <br>
-    <span>Select another pair.</span>
-  </ng-template>
-</ng-template>
+    <span>{{ currency.price || '247.43' }}</span>
+  </li>
+  <li>Time:
+    <br>
+    <span>{{ currency.timestamp || 'Jun 24, 12:54 PM' }}</span>
+  </li>
+</ul>
+

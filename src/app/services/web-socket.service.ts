@@ -8,9 +8,10 @@ import {Observable} from "rxjs";
 export class WebSocketService {
   private ws$: WebSocketSubject<any>;
   private lastSelectedCurrencyId: string = '';
+  private url = 'wss://platform.fintacharts.com/api/streaming/ws/v1/realtime/?token=' + localStorage.getItem('accessToken')
 
   constructor() {
-    this.ws$ = new WebSocketSubject<any>('wss://platform.fintacharts.com/api/streaming/ws/v1/realtime/?token=' + localStorage.getItem('accessToken'));
+    this.ws$ = new WebSocketSubject<any>(this.url);
   }
 
   public sendData(instrumentId: string) {

@@ -1,4 +1,4 @@
-import {inject, Injectable} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {map, Observable} from "rxjs";
 import {SelectedCurrency} from "../types/interfaces/selected-currency";
@@ -8,7 +8,8 @@ import {HistoricalPrice, HistoricalPriceResponse} from "../types/interfaces/hist
   providedIn: 'root'
 })
 export class HttpService {
-  private readonly http = inject(HttpClient)
+  constructor(private http: HttpClient) {
+  }
 
   getListInstruments(): Observable<SelectedCurrency[]> {
     const url = '/api/instruments/v1/instruments/?page=1&size=60';

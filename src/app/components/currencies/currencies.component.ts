@@ -1,4 +1,4 @@
-import {Component, inject, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {HttpService} from "../../services/http.service";
 import {MatFormField} from "@angular/material/form-field";
 import {MatOption, MatSelect} from "@angular/material/select";
@@ -24,16 +24,19 @@ import {MatButton} from "@angular/material/button";
   styleUrl: './currencies.component.scss'
 })
 export class CurrenciesComponent implements OnInit {
-  private readonly httpService = inject(HttpService);
-  private readonly currencyService = inject(CurrencyService);
-
   public currencies: SelectedCurrency[] = [];
   public selectedCurrency: SelectedCurrency | undefined;
+
+  constructor(
+    private httpService: HttpService,
+    private currencyService: CurrencyService
+  ) {}
 
   ngOnInit(): void {
    this.httpService.getListInstruments().subscribe(r => {
      this.currencies = r;
-     this.onCurrencySelectionChange(this.currencies[0])
+     this.onCurrencySelectionChange(this.currencies[0]);
+     this.currencyService.setSelectedCurrency(this.currencies[0])
    });
   }
 
