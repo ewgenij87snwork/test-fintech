@@ -1,4 +1,14 @@
 {
+  "api/streaming/**": {
+    "target": "wss://platform.fintacharts.com/api/streaming/",
+    "secure": true,
+    "changeOrigin": true,
+    "logLevel": "debug",
+    "ws": true,
+    "pathRewrite": {
+      "^/api/streaming": ""
+    }
+  },
   "/api/**": {
     "target": "https://platform.fintacharts.com/api/",
     "secure": false,
@@ -6,6 +16,7 @@
     "logLevel": "debug",
     "pathRewrite": {
       "^/api": ""
-    }
+    },
+    "ws": true
   }
 }

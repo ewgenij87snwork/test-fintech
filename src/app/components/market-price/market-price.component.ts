@@ -44,6 +44,23 @@ export class MarketPriceComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+    this.initMarketData();
+  }
+
+
+
+
+  ngOnDestroy() {
+    this.webSocketService.closeConnection();
+  }
+
+  private resetTimeout() {
+    this.timeout$.next();
+    this.isTimeout = false;
+  }
+
+  private initMarketData() {
+    this.webSocketService.createWS();
     this.currencyService.selectedCurrency$
       .pipe(
         switchMap(selectedCurrency => {
@@ -85,14 +102,5 @@ export class MarketPriceComponent implements OnInit, OnDestroy {
         this.currency.symbol = '';
         this.isTimeout = true;
       });
-  }
-
-  ngOnDestroy() {
-    this.webSocketService.closeConnection();
-  }
-
-  private resetTimeout() {
-    this.timeout$.next();
-    this.isTimeout = false;
   }
 }

@@ -6,14 +6,18 @@ import { WebSocketSubject } from 'rxjs/internal/observable/dom/WebSocketSubject'
   providedIn: 'root',
 })
 export class WebSocketService {
-  private ws$: WebSocketSubject<any>;
+  private ws$!: WebSocketSubject<any>;
   private lastSelectedCurrencyId: string = '';
-  private url =
-    'wss://platform.fintacharts.com/api/streaming/ws/v1/realtime/?token=' +
-    localStorage.getItem('accessToken');
+  private accessToken = localStorage.getItem('accessToken');
 
-  constructor() {
-    this.ws$ = new WebSocketSubject<any>(this.url);
+  public createWS() {
+    const accessToken = localStorage.getItem('accessToken');
+
+    if (!this.ws$ && accessToken) {
+      this.ws$ = new WebSocketSubject(
+        'api/streaming/ws/v1/realtime/?token=' + accessToken
+      );
+    }
   }
 
   public sendData(instrumentId: string) {
