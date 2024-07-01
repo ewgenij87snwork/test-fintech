@@ -47,9 +47,6 @@ export class MarketPriceComponent implements OnInit, OnDestroy {
     this.initMarketData();
   }
 
-
-
-
   ngOnDestroy() {
     this.webSocketService.closeConnection();
   }
@@ -71,7 +68,7 @@ export class MarketPriceComponent implements OnInit, OnDestroy {
 
             return this.webSocketService.getData().pipe(
               tap(data => {
-                if (data.hasOwnProperty('last')) {
+                if (data.last !== undefined) {
                   this.resetTimeout();
                   const currencyWSData = data.last;
                   this.currency = {

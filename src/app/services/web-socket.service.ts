@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { WebSocketSubject } from 'rxjs/internal/observable/dom/WebSocketSubject';
+import { WSData, WSSentData } from '../types/interfaces/currency-ws-data';
 
 @Injectable({
   providedIn: 'root',
 })
 export class WebSocketService {
-  private ws$!: WebSocketSubject<any>;
+  private ws$!: WebSocketSubject<WSData>;
   private lastSelectedCurrencyId: string = '';
-  private accessToken = localStorage.getItem('accessToken');
 
   public createWS() {
     const accessToken = localStorage.getItem('accessToken');
@@ -32,7 +32,7 @@ export class WebSocketService {
     this.ws$.next(this.createWSObject(instrumentId));
   }
 
-  public getData(): Observable<any> {
+  public getData(): Observable<WSData> {
     return this.ws$.asObservable();
   }
 
@@ -40,7 +40,10 @@ export class WebSocketService {
     this.ws$.complete();
   }
 
-  private createWSObject(instrumentId: string, subscribe?: boolean) {
+  private createWSObject(
+    instrumentId: string,
+    subscribe?: boolean
+  ): WSSentData {
     return {
       instrumentId: instrumentId,
       kinds: ['last'],

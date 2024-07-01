@@ -1,6 +1,6 @@
 import { Component, DestroyRef, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { createChart } from 'lightweight-charts';
+import { IChartApi, ISeriesApi, createChart } from 'lightweight-charts';
 import { CurrencyService } from '../../services/currency.service';
 import { HttpService } from '../../services/http.service';
 import { HistoricalPrice } from '../../types/interfaces/historical-price';
@@ -13,8 +13,8 @@ import { HistoricalPrice } from '../../types/interfaces/historical-price';
   styleUrl: './chart.component.scss',
 })
 export class ChartComponent implements OnInit {
-  public chart: any;
-  public candlestickSeries: any;
+  public chart!: IChartApi;
+  public candlestickSeries!: ISeriesApi<'Candlestick'>;
 
   private candleData!: HistoricalPrice[];
 
@@ -69,7 +69,6 @@ export class ChartComponent implements OnInit {
       borderColor: '#283593',
       wickUpColor: '#283593',
       wickDownColor: '#283593',
-      mouseWheel: true,
     });
 
     this.candlestickSeries.setData(candleData);
